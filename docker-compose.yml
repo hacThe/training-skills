@@ -1,0 +1,40 @@
+version: "3.8"
+
+services:
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_DATABASE: myappdb
+      MYSQL_ROOT_PASSWORD: mysecretpassword
+      MYSQL_USER: myappuser
+      MYSQL_PASSWORD: myappuserpassword
+    volumes:
+      - ./mysql-data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+  api:
+    build: ./server
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_USER: myappuser
+      DB_PASSWORD: myappuserpassword
+      DB_NAME: myappdb
+    volumes:
+      - ./server:/server
+      - /server/node_modules
+  client:
+    build: ./client
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./client:/client
+      - /client/node_modules
+
+volumes:
+  db_data:
