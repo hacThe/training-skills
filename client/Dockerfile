@@ -10,6 +10,9 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install
 
+# Copy all rest files
+COPY . .
+
 # Expose port 3001
 EXPOSE 3001
 
